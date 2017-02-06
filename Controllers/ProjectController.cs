@@ -14,20 +14,20 @@ namespace Practice.Controllers
     {
         private DatabaseContext db = new DatabaseContext();
 
-        // GET: Projects
+        // GET: Project
         public ActionResult Index()
         {
-            return View(db.Projects.ToList());
+            return View(db.Project.Include(r => r.Response).ToList());
         }
 
-        // GET: Projects/Details/5
+        // GET: Project/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Projects project = db.Projects.Find(id);
+            Project project = db.Project.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
@@ -35,22 +35,22 @@ namespace Practice.Controllers
             return View(project);
         }
 
-        // GET: Projects/Create
+        // GET: Project/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Projects/Create
+        // POST: Project/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,Name,Description,Time,Incentive,Notes")] Projects project)
+        public ActionResult Create([Bind(Include = "Id,Name,Description,Time,Incentive,Notes")] Project project)
         {
             if (ModelState.IsValid)
             {
-                db.Projects.Add(project);
+                db.Project.Add(project);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -58,14 +58,14 @@ namespace Practice.Controllers
             return View(project);
         }
 
-        // GET: Projects/Edit/5
+        // GET: Project/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Projects project = db.Projects.Find(id);
+            Project project = db.Project.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
@@ -73,12 +73,12 @@ namespace Practice.Controllers
             return View(project);
         }
 
-        // POST: Projects/Edit/5
+        // POST: Project/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Name,Description,Time,Incentive,Notes")] Projects project)
+        public ActionResult Edit([Bind(Include = "Id,Name,Description,Time,Incentive,Notes")] Project project)
         {
             if (ModelState.IsValid)
             {
@@ -89,14 +89,14 @@ namespace Practice.Controllers
             return View(project);
         }
 
-        // GET: Projects/Delete/5
+        // GET: Project/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Projects project = db.Projects.Find(id);
+            Project project = db.Project.Find(id);
             if (project == null)
             {
                 return HttpNotFound();
@@ -104,13 +104,13 @@ namespace Practice.Controllers
             return View(project);
         }
 
-        // POST: Projects/Delete/5
+        // POST: Project/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Projects project = db.Projects.Find(id);
-            db.Projects.Remove(project);
+            Project project = db.Project.Find(id);
+            db.Project.Remove(project);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

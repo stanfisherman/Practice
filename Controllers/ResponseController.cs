@@ -6,29 +6,28 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using Practice.Models;
 
-namespace Practice.Models
+namespace Practice.Controllers
 {
     public class ResponseController : Controller
     {
         private DatabaseContext db = new DatabaseContext();
 
-        // GET: Responses
+        // GET: Response
         public ActionResult Index()
         {
-            var responses = db.Responses.Include(r => r.Projects).Include(r => r.Users);
-            var join = responses.Join(responses, user => user, response => response, (user, response) => new { userId = user.Id, responseId = response.UserId });
-            return View(responses.ToList());
+            return View(db.Response.Include(r => r.Project).Include(r => r.User).ToList());
         }
 
-        // GET: Responses/Details/5
+        // GET: Response/Details/5
         public ActionResult Details(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Responses response = db.Responses.Find(id);
+            Response response = db.Response.Find(id);
             if (response == null)
             {
                 return HttpNotFound();
@@ -36,69 +35,50 @@ namespace Practice.Models
             return View(response);
         }
 
-        // GET: Responses/Create
+        // GET: Response/Create
         public ActionResult Create()
         {
-            ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name");
             return View();
         }
 
-        // POST: Responses/Create
+        // POST: Response/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "FirstName,LastName,PhoneNumber,Email,Checked")] Responses response)
+        public ActionResult Create([Bind(Include = "ResponseId,FirstName,LastName,Email,PhoneNumber,Checked")] Response response)
         {
-
-            string statement = "SELECT * FROM dbo.Users WHERE Email = " + "'" + response.Email + "'" + "OR PhoneNumber = " + "'" + response.PhoneNumber + "'";
-            var check = db.Users.SqlQuery(statement).ToList();
-
-
-            if (!check.Any())
-            {
-                response.UserId = null;
-            }
-            else
-            {
-                Users user = check.First();
-                response.UserId = user.Id;
-            }
-
             if (ModelState.IsValid)
             {
-                db.Responses.Add(response);
+                db.Response.Add(response);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
 
-            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", response.ProjectId);
             return View(response);
         }
 
-        // GET: Responses/Edit/5
+        // GET: Response/Edit/5
         public ActionResult Edit(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Responses response = db.Responses.Find(id);
+            Response response = db.Response.Find(id);
             if (response == null)
             {
                 return HttpNotFound();
             }
-            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", response.ProjectId);
-            //ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", response.UserId);
             return View(response);
         }
 
-        // POST: Responses/Edit/5
+        // POST: Response/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "id,UserId,ProjectId,FirstName,LastName,PhoneNumber,Email,Checked")] Responses response)
+        public ActionResult Edit([Bind(Include = "ResponseId,FirstName,LastName,Email,PhoneNumber,Checked,UserId,ProjectId")] Response response)
         {
             if (ModelState.IsValid)
             {
@@ -106,19 +86,17 @@ namespace Practice.Models
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-            //ViewBag.ProjectId = new SelectList(db.Projects, "Id", "Name", response.ProjectId);
-            //ViewBag.UserId = new SelectList(db.Users, "Id", "FirstName", response.UserId);
             return View(response);
         }
 
-        // GET: Responses/Delete/5
+        // GET: Response/Delete/5
         public ActionResult Delete(int? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Responses response = db.Responses.Find(id);
+            Response response = db.Response.Find(id);
             if (response == null)
             {
                 return HttpNotFound();
@@ -126,15 +104,27 @@ namespace Practice.Models
             return View(response);
         }
 
-        // POST: Responses/Delete/5
+        // POST: Response/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Responses response = db.Responses.Find(id);
-            db.Responses.Remove(response);
+            Response response = db.Response.Find(id);
+            db.Response.Remove(response);
             db.SaveChanges();
             return RedirectToAction("Index");
+        }
+
+        public void Check (int? id)
+        {
+            Response response = db.Response.Find(id);
+            if (response != null)
+            { 
+                response.Checked = true;
+                db.SaveChanges();
+            }
+
+            RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

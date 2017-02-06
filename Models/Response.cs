@@ -7,16 +7,10 @@ using System.Web;
 
 namespace Practice.Models
 {
-    public class Responses
+    public class Response
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int ResponseId { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int? UserId { get; set; }
-
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
-        public int ProjectId { get; set; }
 
         public string FirstName { get; set; }
 
@@ -28,7 +22,10 @@ namespace Practice.Models
 
         public Boolean Checked { get; set; }
 
-        public virtual ICollection<Users> Users { get; set; }
-        public virtual ICollection<Projects> Projects { get; set; }
+        public int UserId { get; set; }
+        public int ProjectId { get; set; }
+
+        public  User User { get; set; }
+        public  Project Project { get; set; }
     }
 }

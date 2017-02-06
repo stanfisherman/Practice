@@ -8,9 +8,8 @@ using System.Data.Entity.Spatial;
 namespace Practice.Models
 {
 
-    public class Projects
+    public class Project
     {
-
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int ProjectId { get; set; }
 
@@ -29,6 +28,6 @@ namespace Practice.Models
         [Column(TypeName = "text")]
         public string Notes { get; set; }
 
-        public virtual ICollection<Responses> Responses { get; set; }
+        public ICollection<Response> Response { get; set; }
     }
 }

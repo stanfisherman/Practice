@@ -14,20 +14,20 @@ namespace Practice.Controllers
     {
         private DatabaseContext db = new DatabaseContext();
 
-        // GET: Users
+        // GET: User
         public ActionResult Index()
         {
-            return View(db.Users.ToList());
+            return View(db.User.Include(r => r.Response).ToList());
         }
 
-        // GET: Users/Details/5
+        // GET: User/Details/5
         public ActionResult Details(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users user = db.Users.Find(id);
+            User user = db.User.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -35,22 +35,22 @@ namespace Practice.Controllers
             return View(user);
         }
 
-        // GET: Users/Create
+        // GET: User/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Users/Create
+        // POST: User/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "FirstName,LastName,Email,Password,PhoneNumber")] Users user)
+        public ActionResult Create([Bind(Include = "FirstName,LastName,Email,Password,PhoneNumber")] User user)
         {
             if (ModelState.IsValid)
             {
-                db.Users.Add(user);
+                db.User.Add(user);
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
@@ -58,14 +58,14 @@ namespace Practice.Controllers
             return View(user);
         }
 
-        // GET: Users/Edit/5
+        // GET: User/Edit/5
         public ActionResult Edit(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users user = db.Users.Find(id);
+            User user = db.User.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -73,12 +73,12 @@ namespace Practice.Controllers
             return View(user);
         }
 
-        // POST: Users/Edit/5
+        // POST: User/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "FirstName,LastName,Email,Password,PhoneNumber")] Users user)
+        public ActionResult Edit([Bind(Include = "FirstName,LastName,Email,Password,PhoneNumber")] User user)
         {
             if (ModelState.IsValid)
             {
@@ -89,14 +89,14 @@ namespace Practice.Controllers
             return View(user);
         }
 
-        // GET: Users/Delete/5
+        // GET: User/Delete/5
         public ActionResult Delete(int id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Users user = db.Users.Find(id);
+            User user = db.User.Find(id);
             if (user == null)
             {
                 return HttpNotFound();
@@ -104,13 +104,13 @@ namespace Practice.Controllers
             return View(user);
         }
 
-        // POST: Users/Delete/5
+        // POST: User/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Users user = db.Users.Find(id);
-            db.Users.Remove(user);
+            User user = db.User.Find(id);
+            db.User.Remove(user);
             db.SaveChanges();
             return RedirectToAction("Index");
         }

@@ -7,9 +7,9 @@ using System.Web;
 
 namespace Practice.Models
 {
-    public class Users
+    public class User
     {
-        
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int UserId { get; set; }
 
         public string FirstName { get; set; }
@@ -22,6 +22,7 @@ namespace Practice.Models
 
         public string PhoneNumber { get; set; }
 
-        public virtual ICollection<Responses> Responses { get; set; }
+        public ICollection<Response> Response { get; set; }
+
     }
 }
