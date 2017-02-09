@@ -17,6 +17,7 @@ namespace Practice.Controllers
         // GET: Response
         public ActionResult Index()
         {
+            ViewBag.projects = new SelectList(db.Project, "ProjectId", "Name");
             return View(db.Response.Include(r => r.Project).Include(r => r.User).ToList());
         }
 
@@ -36,20 +37,44 @@ namespace Practice.Controllers
         }
 
         // GET: Response/Create
-        public ActionResult Create()
+        public ActionResult Create(int? id)
         {
+            List<string> projects = new List<string> ();
+
+            foreach (var row in db.Project)
+            {
+                projects.Add(row.Name);
+            }
+
+            ViewBag.Projects = projects;
+
+            Project name = db.Project.Find(id);
+
+            if (name != null)
+            {
+                ViewBag.Selected = name.Name;
+            }
+            else
+            {
+                ViewBag.Selected = "Select Project";
+            }
+
             return View();
         }
-
+        
         // POST: Response/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ResponseId,FirstName,LastName,Email,PhoneNumber,Checked")] Response response)
+        public ActionResult Create([Bind(Include = "ProjectId,FirstName,LastName,Email,PhoneNumber")] Response response)
         {
+            //string getProjectsQuery = "Show ProjectId FROM Project WHERE ProjectId = " + "'" + response.ProjectName + "'";
+            //db.Project.
+            //if (response.Project.Name == "lol")
             if (ModelState.IsValid)
             {
+                response.Checked = false;
                 db.Response.Add(response);
                 db.SaveChanges();
                 return RedirectToAction("Index");

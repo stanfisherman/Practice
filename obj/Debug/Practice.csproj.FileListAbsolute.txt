@@ -81,4 +81,3 @@ c:\users\stanton\documents\visual studio 2015\Projects\Practice\Practice\obj\Deb
 c:\users\stanton\documents\visual studio 2015\Projects\Practice\Practice\obj\Debug\Practice.pdb
 C:\Users\Stanton\Documents\Visual Studio 2015\Projects\Practice\Practice\obj\Debug\Practice.Migrations.initial.resources
 C:\Users\Stanton\Documents\Visual Studio 2015\Projects\Practice\Practice\obj\Debug\Practice.csproj.GenerateResource.Cache
-C:\Users\Stanton\documents\visual studio 2015\Projects\Practice\Practice\obj\Debug\Practice.csprojResolveAssemblyReference.cache
