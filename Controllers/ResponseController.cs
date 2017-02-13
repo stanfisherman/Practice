@@ -54,10 +54,6 @@ namespace Practice.Controllers
             {
                 ViewBag.Selected = name.Name;
             }
-            else
-            {
-                ViewBag.Selected = "Select Project";
-            }
 
             return View();
         }
@@ -67,13 +63,13 @@ namespace Practice.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "ProjectId,FirstName,LastName,Email,PhoneNumber")] Response response)
+        public ActionResult Create([Bind(Include = "FirstName,LastName,Email,PhoneNumber")] Response response, string Name)
         {
-            //string getProjectsQuery = "Show ProjectId FROM Project WHERE ProjectId = " + "'" + response.ProjectName + "'";
-            //db.Project.
-            //if (response.Project.Name == "lol")
-            if (ModelState.IsValid)
+            var project = db.Project.Where(r => r.Name == Name);
+            System.Diagnostics.Debug.WriteLine(Name);
+            if (ModelState.IsValid && project.Count() == 1)
             {
+                response.ProjectId = project.First().ProjectId;
                 response.Checked = false;
                 db.Response.Add(response);
                 db.SaveChanges();
@@ -140,16 +136,20 @@ namespace Practice.Controllers
             return RedirectToAction("Index");
         }
 
-        public void Check (int? id)
+        [HttpPost]
+        public ActionResult Check(string responseId)
         {
-            Response response = db.Response.Find(id);
-            if (response != null)
-            { 
-                response.Checked = true;
-                db.SaveChanges();
+            if (responseId != null)
+            {
+                Response response = db.Response.Find(Int32.Parse(responseId));
+                if (response != null)
+                {
+                    response.Checked = !response.Checked;
+                    db.SaveChanges();
+                }
+                return Json (new { check = response.Checked } );
             }
-
-            RedirectToAction("Index");
+            return null;
         }
 
         protected override void Dispose(bool disposing)

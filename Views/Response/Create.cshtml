@@ -22,10 +22,8 @@
         <div class="form-group">
             @Html.Label("Name", "Project Name", htmlAttributes: new { @class = "control-label col-md-2" })
         <div class="col-md-10">
-             @Html.DropDownList("Name", new SelectList(projects), selected, new { @class = "drop" })
+             @Html.DropDownList("Name", new SelectList(projects, selected), "Select Project", new { @class = "drop" })
         </div>
-            
-            @*"a", new SelectList(projects), "  -----Select List-----  ", new { @class = "drop"}*@ 
         </div>
 
         <div class="form-group">
