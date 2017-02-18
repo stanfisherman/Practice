@@ -33,7 +33,7 @@ namespace Practice.Controllers
             {
                 return HttpNotFound();
             }
-            return View(response);
+            return PartialView("Details", response);
         }
 
         // GET: Response/Create
@@ -137,15 +137,19 @@ namespace Practice.Controllers
         }
 
         [HttpPost]
-        public ActionResult Check(string responseId)
+        public ActionResult Check(int? id)
         {
-            if (responseId != null)
+            if (id != null)
             {
-                Response response = db.Response.Find(Int32.Parse(responseId));
+                Response response = db.Response.Find(id);
                 if (response != null)
                 {
                     response.Checked = !response.Checked;
                     db.SaveChanges();
+                }
+                else
+                {
+                    return HttpNotFound();
                 }
                 return Json (new { check = response.Checked } );
             }
