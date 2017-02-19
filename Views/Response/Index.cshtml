@@ -72,9 +72,9 @@
         </td>
         <td>
             <a href="" , class="checkButton">Check</a> |
-            <a href="", class="editButton">Edit</a> |
+            <a onclick="edit($(this).parent().parent().find('.responseId').text(), 'Response')" href="#", class="editButton">Edit</a> |
+            <a onclick="details($(this).parent().parent().find('.responseId').text(), 'Response')" href="#" , class="detailsButton">Details</a> |
             @*<a href="" , class="detailsButton">Details</a> |*@
-            @Html.ActionLink("Edit", "Edit", new { id = item.ResponseId }) |
             @Html.ActionLink("Details", "Details", new { id = item.ResponseId }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.ResponseId })
         </td>
@@ -82,12 +82,11 @@
 }
 </table>
 
-<div id="content" title="Basic dialog" style="display: none">
+<div id="dialog" style="display: none">
 </div>
 
 <script type="text/javascript">
-    
-    //check button
+    //toggles the checked parameter for responses so we know if a response has been seen and written down
     $(".checkButton").click(function() {
             event.preventDefault();
             var row = $(this).parent().parent();
@@ -96,46 +95,8 @@
                 type: "POST",
                 data: { "id": $(this).parent().parent().find(".responseId").html() },
                 success: function (result) {
-                    row.find(".check").html(result);
+                    row.find(".check").replaceWith().html(result);
                 }
             });
     });
-
-    //ajax buttons
-        $(".editButton").click(function () {
-            event.preventDefault();
-            var options = { "backdrop": "static", keyboard: true };
-            $.ajax({
-                url: '@Url.Action("Details", "Response")',
-                type: "GET",
-                data: { "id": $(this).parent().parent().find(".responseId").html() },
-                success: function (result) {
-                    //$("#content").html(result);
-                    //$("#model").modal(options);
-                    //$("#model").modal('show');
-                    $("#content").html(result);
-
-                },
-                complete: function (xmlHttpRequest, textStatus) {
-                    $("#content").dialog({
-                        autoOpen: false,
-                        width: 1000,
-                        height: 1000,
-                        resizable: false,
-                        title: "YO",
-                        modal: true,
-                        open: function (event, ui) {
-
-                        },
-                        buttons: {
-                            "Close": function () {
-                                $("#content").dialog("close");
-                            }
-                        }
-                    });
-                    $("#content").dialog("open");
-                }
-            });
-        });
-        
 </script>

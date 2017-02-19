@@ -91,7 +91,7 @@ namespace Practice.Controllers
             {
                 return HttpNotFound();
             }
-            return View(response);
+            return PartialView("Edit", response);
         }
 
         // POST: Response/Edit/5
@@ -99,15 +99,13 @@ namespace Practice.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "ResponseId,FirstName,LastName,Email,PhoneNumber,Checked,UserId,ProjectId")] Response response)
+        public void Edit([Bind(Include = "ResponseId,FirstName,LastName,Email,PhoneNumber,Checked,UserId,ProjectId")] Response response)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(response).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("Index");
             }
-            return View(response);
         }
 
         // GET: Response/Delete/5
