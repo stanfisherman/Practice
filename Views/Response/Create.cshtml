@@ -1,11 +1,8 @@
 ﻿@model Practice.Models.Response
 @{
+    ViewBag.Title = "Create";
     List<string> projects = ViewBag.Projects;
     string selected = ViewBag.Selected;
-}
-
-@{
-    ViewBag.Title = "Create";
 }
 
 <h2>Create</h2>
@@ -19,11 +16,12 @@
         <h4>Response</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
         <div class="form-group">
             @Html.Label("Name", "Project Name", htmlAttributes: new { @class = "control-label col-md-2" })
-        <div class="col-md-10">
-             @Html.DropDownList("Name", new SelectList(projects, selected), "Select Project", new { @class = "drop" })
-        </div>
+            <div class="col-md-10">
+                @Html.DropDownList("Name", new SelectList(projects, selected), "Select Project", new { @class = "drop" } )
+            </div>
         </div>
 
         <div class="form-group">

@@ -37,10 +37,10 @@
 @foreach (var item in Model)
 {
     <tr>
-        <td class="responseId">
+        <td id="responseId">
                @Html.DisplayFor(modelItem => item.ResponseId)
         </td>
-        <td class="id">
+        <td id="id">
             @{
                 if (item.UserId == null || item.UserId.HasValue == false)
                 {
@@ -52,28 +52,28 @@
                 }
             }
         </td>
-        <td class="project">
+        <td id="project">
             @Html.DisplayFor(modelItem => item.Project.Name)
         </td>
-        <td class="firstName">
+        <td id="firstName">
             @Html.DisplayFor(modelItem => item.FirstName)
         </td>
-        <td class="lastName">
+        <td id="lastName">
             @Html.DisplayFor(modelItem => item.LastName)
         </td>
-        <td class="email">
+        <td id="email">
             @Html.DisplayFor(modelItem => item.Email)
         </td>
-        <td class="phoneNumber">
+        <td id="phoneNumber">
             @Html.DisplayFor(modelItem => item.PhoneNumber)
         </td>
-        <td class="check">
+        <td id="check">
             @Html.DisplayFor(modelItem => item.Checked)
         </td>
         <td>
             <a href="" , class="checkButton">Check</a> |
-            <a onclick="edit($(this).parent().parent().find('.responseId').text(), 'Response')" href="#", class="editButton">Edit</a> |
-            <a onclick="details($(this).parent().parent().find('.responseId').text(), 'Response')" href="#" , class="detailsButton">Details</a> |
+            <a onclick="ajaxCRUD($(this).parent().parent(), 'Response', 'Edit')" href="#", class="editButton">Edit</a> |
+            <a onclick="details($(this).parent().parent().find('#responseId').text(), 'Response')" href="#" , class="detailsButton">Details</a> |
             @*<a href="" , class="detailsButton">Details</a> |*@
             @Html.ActionLink("Details", "Details", new { id = item.ResponseId }) |
             @Html.ActionLink("Delete", "Delete", new { id = item.ResponseId })
@@ -93,9 +93,14 @@
             $.ajax({
                 url: '@Url.Action("Check", "Response")',
                 type: "POST",
-                data: { "id": $(this).parent().parent().find(".responseId").html() },
+                data: { "id": $(this).parent().parent().find("#responseId").html() },
                 success: function (result) {
-                    row.find(".check").replaceWith().html(result);
+                    if (result.check == true) {
+                        row.find("#check").replaceWith("<td id='check'><input checked='checked' class='check-box' disabled='disabled' type='checkbox'></td>");
+                    } 
+                    else {
+                        row.find("#check").replaceWith("<td id='check'><input class='check-box' disabled='disabled' type='checkbox'></td>");
+                    }
                 }
             });
     });

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
 using System.Linq;
@@ -7,6 +6,9 @@ using System.Net;
 using System.Web;
 using System.Web.Mvc;
 using Practice.Models;
+using System.Web.Script.Serialization;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Practice.Controllers
 {
@@ -47,13 +49,7 @@ namespace Practice.Controllers
             }
 
             ViewBag.Projects = projects;
-
-            Project name = db.Project.Find(id);
-
-            if (name != null)
-            {
-                ViewBag.Selected = name.Name;
-            }
+            ViewBag.Selected = (db.Project.Find(id).Name != null) ? db.Project.Find(id).Name : null;
 
             return View();
         }
@@ -91,6 +87,17 @@ namespace Practice.Controllers
             {
                 return HttpNotFound();
             }
+
+            List<string> projects = new List<string>();
+
+            foreach(Project row in db.Project)
+            {
+                projects.Add(row.Name);
+            }
+
+            ViewBag.Projects = projects;
+            if (response.Project.Name != null)
+                ViewBag.Current = response.Project.Name;
             return PartialView("Edit", response);
         }
 
@@ -99,13 +106,16 @@ namespace Practice.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public void Edit([Bind(Include = "ResponseId,FirstName,LastName,Email,PhoneNumber,Checked,UserId,ProjectId")] Response response)
+        public string Edit([Bind(Include = "ResponseId,FirstName,LastName,Email,PhoneNumber,Checked,UserId")] Response response, string name)
         {
-            if (ModelState.IsValid)
+            var project = db.Project.Where(r => r.Name == name);
+            if (ModelState.IsValid && project.Count() == 1)
             {
+                response.ProjectId = project.First().ProjectId;
                 db.Entry(response).State = EntityState.Modified;
                 db.SaveChanges();
             }
+            return JsonConvert.SerializeObject(db.Response.Where(r => r.ResponseId == response.ResponseId), Formatting.Indented, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
         }
 
         // GET: Response/Delete/5
@@ -152,6 +162,12 @@ namespace Practice.Controllers
                 return Json (new { check = response.Checked } );
             }
             return null;
+        }
+
+        [HttpGet]
+        public Response getResponse(int? id)
+        {
+            return db.Response.Find(id);
         }
 
         protected override void Dispose(bool disposing)
