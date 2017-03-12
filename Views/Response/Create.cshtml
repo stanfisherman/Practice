@@ -5,29 +5,34 @@
     string selected = ViewBag.Selected;
 }
 
-<h2>Create</h2>
-
-
 @using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+    <script>
+        $(function () {
+            $(document).tooltip({
+                position: {
+                    my: "left top",
+                    at: "right+5 top-5",
+                    collision: "none"
+                }
+            });
+        });
+    </script>
     <div class="form-horizontal">
-        <h4>Response</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
 
         <div class="form-group">
             @Html.Label("Name", "Project Name", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.DropDownList("Name", new SelectList(projects, selected), "Select Project", new { @class = "drop" } )
+                @Html.DropDownList("Name", new SelectList(projects, selected), "Select Project", new { @class = "drop form-input", @id = "projectName" } )
             </div>
         </div>
 
         <div class="form-group">
             @Html.LabelFor(model => model.FirstName, "First Name", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control  form-input", @id = "firstName" } })
                 @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -35,7 +40,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.LastName, "Last Name", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control form-input", @id = "lastName" } })
                 @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -43,7 +48,7 @@
         <div class="form-group">
             @Html.LabelFor(model => model.Email, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.Email, new { htmlAttributes = new { @class = "form-control form-input", @id = "email" } })
                 @Html.ValidationMessageFor(model => model.Email, "", new { @class = "text-danger" })
             </div>
         </div>
@@ -51,22 +56,16 @@
         <div class="form-group">
             @Html.LabelFor(model => model.PhoneNumber, "Phone Number", htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control" } })
+                @Html.EditorFor(model => model.PhoneNumber, new { htmlAttributes = new { @class = "form-control form-input", @id = "phoneNumber" } })
                 @Html.ValidationMessageFor(model => model.PhoneNumber, "", new { @class = "text-danger" })
             </div>
         </div>
 
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Create" class="btn btn-default" />
-            </div>
+        <div id="submit" style="display: none;">
+            <p>Your response has been submited!</p>
         </div>
     </div>
 }
-
-<div>
-    @Html.ActionLink("Back to List", "Index")
-</div>
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")

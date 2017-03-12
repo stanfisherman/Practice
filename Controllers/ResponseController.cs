@@ -9,6 +9,8 @@ using Practice.Models;
 using System.Web.Script.Serialization;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
+using System;
+using System.Diagnostics;
 
 namespace Practice.Controllers
 {
@@ -51,28 +53,38 @@ namespace Practice.Controllers
             ViewBag.Projects = projects;
             ViewBag.Selected = (db.Project.Find(id).Name != null) ? db.Project.Find(id).Name : null;
 
-            return View();
+            return PartialView("Create");
         }
-        
+
         // POST: Response/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "FirstName,LastName,Email,PhoneNumber")] Response response, string Name)
+        public string Create([Bind(Include = "FirstName,LastName,Email,PhoneNumber")] Response response, string Name)
         {
             var project = db.Project.Where(r => r.Name == Name);
             System.Diagnostics.Debug.WriteLine(Name);
             if (ModelState.IsValid && project.Count() == 1)
             {
+                try
+                {
+                    var user = db.User.Where(r => r.FirstName == response.FirstName && r.LastName == response.LastName);
+                    response.UserId = user.First().UserId;
+                }
+                catch (InvalidOperationException e)
+                {
+                    Debug.WriteLine("Response is a new user or has no matching user in database:" + e);
+                }
+               
                 response.ProjectId = project.First().ProjectId;
                 response.Checked = false;
                 db.Response.Add(response);
                 db.SaveChanges();
-                return RedirectToAction("Index");
-            }
 
-            return View(response);
+            }
+            var lastAddedResponse = db.Response.Where(r => r.FirstName == response.FirstName && r.LastName == response.LastName && r.Project.Name == Name);
+            return JsonConvert.SerializeObject(lastAddedResponse, new JsonSerializerSettings { PreserveReferencesHandling = PreserveReferencesHandling.Objects });
         }
 
         // GET: Response/Edit/5
@@ -130,18 +142,18 @@ namespace Practice.Controllers
             {
                 return HttpNotFound();
             }
-            return View(response);
+            return PartialView("Delete", response);
         }
 
         // POST: Response/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(int id)
+        public int DeleteConfirmed(int id)
         {
             Response response = db.Response.Find(id);
             db.Response.Remove(response);
-            db.SaveChanges();
-            return RedirectToAction("Index");
+
+            return db.SaveChanges();
         }
 
         [HttpPost]

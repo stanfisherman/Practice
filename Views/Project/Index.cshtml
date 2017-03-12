@@ -35,7 +35,9 @@
 @foreach (var item in Model) {
     <tr>
         <td>
-            @Html.DisplayFor(modelItem => item.ProjectId)
+            <span id="projectId">
+                @Html.DisplayFor(modelItem => item.ProjectId)
+            </span>
         </td>
         <td>
             @Html.DisplayFor(modelItem => item.Name)
@@ -53,7 +55,7 @@
             @Html.DisplayFor(modelItem => item.Notes)
         </td>
         <td>
-            @Html.ActionLink("Sign Up", "Create", "Response", new { id = item.ProjectId }, null) |
+           <a onclick="ajaxCRUD($(this).parent().parent(), 'Response', 'Create')" href="#">Create</a> |
             @Html.ActionLink("Details", "Details", new { id=item.ProjectId }) |
             @Html.ActionLink("Edit", "Edit", new { id = item.ProjectId }) |
             @Html.ActionLink("Delete", "Delete", new { id=item.ProjectId })
@@ -62,3 +64,9 @@
 }
 
 </table>
+<div id="response" style="display: none;">
+    <p>Your response has been submited!</p>
+</div>
+<div id="submit" style="display: none;">
+    <p>Your project has been created!</p>
+</div>

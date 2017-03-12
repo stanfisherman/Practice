@@ -1,10 +1,10 @@
 ﻿@model IEnumerable<Practice.Models.Response> 
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Responses";
 }
 
-<h2>Index</h2>
+<h2>Responses</h2>
 
 <table class="table">
     <tr>
@@ -73,17 +73,12 @@
         <td>
             <a href="" , class="checkButton">Check</a> |
             <a onclick="ajaxCRUD($(this).parent().parent(), 'Response', 'Edit')" href="#", class="editButton">Edit</a> |
-            <a onclick="details($(this).parent().parent().find('#responseId').text(), 'Response')" href="#" , class="detailsButton">Details</a> |
-            @*<a href="" , class="detailsButton">Details</a> |*@
-            @Html.ActionLink("Details", "Details", new { id = item.ResponseId }) |
-            @Html.ActionLink("Delete", "Delete", new { id = item.ResponseId })
+            <a onclick="details($(this).parent().parent(), 'Response')" href="#" , class="detailsButton">Details</a> |
+            <a onclick="ajaxCRUD($(this).parent().parent(), 'Response', 'Delete')" href="#" , class="detailsButton">Delete</a> |
         </td>
     </tr>
 }
 </table>
-
-<div id="dialog" style="display: none">
-</div>
 
 <script type="text/javascript">
     //toggles the checked parameter for responses so we know if a response has been seen and written down

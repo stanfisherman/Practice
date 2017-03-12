@@ -15,15 +15,23 @@ namespace Practice.Models
         public int ResponseId { get; set; }
 
         [Display(Name = "First Name")]
+        [Required()]
+        [MinLength(2)]
         public string FirstName { get; set; }
 
         [Display(Name = "Last Name")]
+        [Required()]
+        [MinLength(2)]
         public string LastName { get; set; }
 
         [Display(Name = "Email")]
+        [Required()]
+        [EmailAddress()]
         public string Email { get; set; }
 
         [Display(Name = "Phone Number")]
+        [Required()]
+        [Phone()]
         public string PhoneNumber { get; set; }
 
         [Display(Name = "Checked")]
